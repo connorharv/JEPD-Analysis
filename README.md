@@ -10,40 +10,28 @@ Defined to be the statistical analysis of variations in literary style between o
 
 For this project, I will use it to determine the current status on the JEPD or Documentary Source hypothesis, which states that the 5 books of Moses were actually written by 4 different authors. Currently its validity is questioned, and I will do research using the tactics of stylometry to determine the veracity of the Documentary Source Hypothesis (appreviated JEPD).
 
-This will be done in two ways.
+This will be done by first splitting the entire JEPD source into individual chapters. Each chapter will be graded according to the following 10 characteristics.
 
-1. Traditional programming with my own program using specific characteristics that will be listed below.
-2. An unsupervised machine learning model will be trained on numerous articles/books/authors, then be tested to categorize the data.
-
-## 1. Traditional Programming
-
-The following metrics will be used to determine authorship. In style with the Old Testament, I will grade each chapter (and perhaps larger sections as well) according to the following 10 characteristics. Instead of the Ten Commandments, it will be the
-
-### Ten Characteristics of Authorship
+# Ten Characteristics of Authorship
 
 1. Function words (the, and, of, in, etc.)
-2. Word frequency distributions
-3. Type-Token Ratio (TTR) -- Unique words in a chunk
-4. Average/mean word length
-5. Distribution of word lengths (where in sentences)
-6. Sentence length
-7. Punctuation / Punctuation frequency
-8. Syntatic Pattern repetition (POS tag distributions)
-9. Character-level patterns (pairs/triples of characters)
-10. Relative entropy between word adjaceny networks (WANs).
+2. Word frequency Distribution
+3. Type-Token Ratio (TTR) -- Unique words per Chapter
+4. Average Word Length
+5. Distribution of Word Lengths (where in sentences)
+6. Sentence Length
+7. Punctuation
+8. Character Level Patterns (3-ngram)
+9. POS-Tag Ratios
+10. MTLD Lexical Richness Index
 
-## 2. Unsupervised Model
+## Unsupervised Model
 
-This will be far more exciting. I will create a completely unsupervised model to determine where the authors (and how many) were present. The following tactics will be used.
+Using the metrics listed above, I will create an unsupervised model to attribute each chapter of the text to one of four authors. In terms of Machine Learning (ML), there is very little data in this dataset (only 186 chapters), so I will use a Hierarchical Clustering algorithm. `Scikit-Learn` provides a model called `AgglomerativeClustering` which fits my description. For the model, I will set `n_clusters=4` for obvious reasons.
 
-1. Feature Extraction
-2. PCA -- Principal Component Analysis (dimensional reduction)
-3. Clustering (probably K-means)
+Before running the model through the data, it will undergo two steps of preprocessing.
 
-### Feature Extraction
+1. Normalization
+2. Principal Component Analysis -- Dimensionality Reduction
 
-### PCA
-
-### Clustering
-
-I'd prefer to use `K-means` since I have the most experience with it. However, `Hierarchical Clustering`, `DBSCAN` or `Gaussian Mixture Models` could provide useful if I don't want to specify a `k` for `K-means`, although I probably will.
+Normazliation is to be expected. PCA (step 2) is used to reduce the number of dimensions (characteristics) used in the model. I'm not fluent enough in Linear Algebra to fully understand how it works, but it finds the axes along which the data varies the most using eigenvalues and eigenvectors, and projects the data onto the new axes corresponding to the eigenvectors. The end result is data that is easier for the model to analyze while still retaining most of the original information.
