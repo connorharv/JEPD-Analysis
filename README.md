@@ -34,4 +34,22 @@ Before running the model through the data, it will undergo two steps of preproce
 1. Normalization
 2. Principal Component Analysis -- Dimensionality Reduction
 
-Normazliation is to be expected. PCA (step 2) is used to reduce the number of dimensions (characteristics) used in the model. I'm not fluent enough in Linear Algebra to fully understand how it works, but it finds the axes along which the data varies the most using eigenvalues and eigenvectors, and projects the data onto the new axes corresponding to the eigenvectors. The end result is data that is easier for the model to analyze while still retaining most of the original information.
+Normalization is to be expected.
+
+PCA (step 2) is used to reduce the number of dimensions (characteristics) used in the model. It finds the axes along which the data varies the most using eigenvalues and eigenvectors and projects the data onto the new axes corresponding to the eigenvectors. The end result is data that is easier for the model to analyze while still retaining most of the original information. I tried reductions into different dimensions, I settled by using `n_components=0.95` so the data is dimensionally reduced unto it accounts for `95%` of the data. For me, this settled at `48`.
+
+After the normalization and dimensional reduction, I fit the model to the provided data from the Ten Characteristics, and produced the graphs as shown in `pictures`.
+
+Unfortunately with `AgglomerativeClustering`, it only provides final predictions without probabilities, so I created a "soft" probabilities function that determines _roughly_ what the probability would have been.
+
+With this information, I created 3 separate plots that show how the model predicted the results. The first graph corresponds to each chapter (the direct values from the model, no `probas`). The second graph shows the rough percentage of each author it assumes was present, with larger percentages showing up as larger vertical slices of each chapter. The final graph uses horizontal slides of vertical bars to show rough percentages per chapter.
+
+![img](pictures/predictions/author_to_chapter.png)
+
+![img](pictures/predictions/author_probability_combined.png)
+
+![img](pictures/predictions/author_probability_vertical.png)
+
+## Caveats
+
+I decided to use an unsupervised model (as opposed to a semi-supervised or supervised model) to make the authorship attribution as unbiased as possible. While there are bibles that show each source, I stayed away from them to allow the model to determine for itself the authorship of each chapter solely based on the Ten Characteristics. This means there is no textual bias in the data other than pure lexical analysis, but having some confirmation of certain sections would make the data far more concrete, like a semi-supervised model. Like stated above, I did not want to present any unwanted biases (i.e. if one of the sections attributed to one source is completely wrong), and analyze the first 5 books of Moses as a whole without external sources.
